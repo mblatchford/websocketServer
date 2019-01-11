@@ -11,11 +11,16 @@ class rooms{
       this.players = players
     }
 }
-
 wss.on("connection", function connection(ws){
     console.log("Connection made to server")
     // on each connection add to pendingMatch array
     pendingMatch.push(ws)
+    // to prevent server from crashing when the same client opens multiple websockets
+    ws.on('close', function close() {
+      console.log('disconnected');
+      pendingMatch = []
+
+    });
     // for every two connections generate a room and reinitialize the pendingMatch arr
     if (pendingMatch.length == 2){
     console.log("pair connected")
